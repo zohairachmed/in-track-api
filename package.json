@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/zohairachmed/in-track-api#readme",
   "dependencies": {
+    "fs": "0.0.1-security",
     "hapi": "^17.3.1",
     "mongoose": "^5.0.14"
   }

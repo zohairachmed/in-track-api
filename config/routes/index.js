@@ -1,10 +1,11 @@
-'use strict';
+const fs = require('fs');
 
-var dog = require('./dog');
-var amazon = require('./amazon');
-var fleetfarm = require('./fleetfarm');
-var intrack = require('./in-track');
-var walmart = require('./walmart');
+let routes = [];
 
+fs.readdirSync(__dirname)
+  .filter(file => file != 'index.js')
+  .forEach(file => {
+    routes = routes.concat(require(`./${file}`))
+  });
 
-module.exports = [].concat(dog, amazon, fleetfarm, intrack, walmart);
+module.exports = routes;
