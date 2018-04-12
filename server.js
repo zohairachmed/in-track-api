@@ -1,8 +1,8 @@
 'use strict';
+var routes = require('./config/routes');
 
 const Hapi = require('hapi');
 const mongoose = require('mongoose');
-const DogController =  require('./src/controllers/dog');
 const MongoDBUrl = 'mongodb://localhost:27017/dogapi';
 
 const server = new Hapi.Server({
@@ -10,34 +10,7 @@ const server = new Hapi.Server({
   host: 'localhost'
 });
 
-server.route({
-  method: 'GET',
-  path: '/dogs',
-  handler: DogController.list
-});
-
-server.route({
-  method: 'GET',
-  path: '/dogs/{id}',
-  handler: DogController.get
-});
-server.route({
-  method: 'POST',
-  path: '/dogs',
-  handler: DogController.create
-});
-
-server.route({
-  method: 'PUT',
-  path: '/dogs/{id}',
-  handler: DogController.update
-});
-
-server.route({
-  method: 'DELETE',
-  path: '/dogs/{id}',
-  handler: DogController.remove
-});
+server.route(routes);
 
 (async () => {
   try {  
