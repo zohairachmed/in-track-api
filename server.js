@@ -71,6 +71,11 @@ const manifest = {
             plugin: {
                 register: './modules/inventory'
             }
+        },
+        {
+            plugin: {
+                register: './modules/in-track'
+            }
         }
     ]
 };
