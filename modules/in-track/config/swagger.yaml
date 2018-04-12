@@ -1,0 +1,129 @@
+swagger: '2.0'
+info:
+  description: Inventory - REST Endpoints
+  version: 1.15.0-SNAPSHOT
+  title: Inventory
+basePath: /inventory/
+tags:
+  - name: Inventory
+schemes:
+  - https
+  - http
+paths:
+  /v1/walmart:
+    get:
+      tags:
+        - Inventory
+      summary: Pre-Inventory data for the login UI
+      description: 'Pre-Inventory information, for example whether the user needs to be challenged with a CAPTCHA'
+      produces:
+        - application/json
+      parameters:
+        - name: url
+          in: query
+          description: The product id we need to check inventory for
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/InventoryResponse'
+        '500':
+          description: Internal server error
+  /v1/fleetfarm:
+    get:
+      tags:
+        - Inventory
+      summary: Pre-Inventory data for the login UI
+      description: 'Pre-Inventory information, for example whether the user needs to be challenged with a CAPTCHA'
+      produces:
+        - application/json
+      parameters:
+        - name: url
+          in: query
+          description: The product id we need to check inventory for
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/InventoryResponse'
+        '500':
+          description: Internal server error
+definitions:
+  InventoryResponse:
+    type: object
+    properties:
+      productID:
+        type: string
+      merchant:
+        type: string
+      minimumInventory:
+        type: integer
+        swagger: '2.0'
+        info:
+          description: Inventory - REST Endpoints
+          version: 1.15.0-SNAPSHOT
+          title: Inventory
+        basePath: /inventory/
+        tags:
+          - name: Inventory
+        schemes:
+          - https
+          - http
+        paths:
+          /v1/walmart:
+            get:
+              tags:
+                - Inventory
+              summary: Pre-Inventory data for the login UI
+              description: 'Pre-Inventory information, for example whether the user needs to be challenged with a CAPTCHA'
+              produces:
+                - application/json
+              parameters:
+                - name: url
+                  in: query
+                  description: The product id we need to check inventory for
+                  required: false
+                  type: string
+              responses:
+                '200':
+                  description: Success
+                  schema:
+                    $ref: '#/definitions/InventoryResponse'
+                '500':
+                  description: Internal server error
+          /v1/fleetfarm:
+            get:
+              tags:
+                - Inventory
+              summary: Pre-Inventory data for the login UI
+              description: 'Pre-Inventory information, for example whether the user needs to be challenged with a CAPTCHA'
+              produces:
+                - application/json
+              parameters:
+                - name: url
+                  in: query
+                  description: The product id we need to check inventory for
+                  required: false
+                  type: string
+              responses:
+                '200':
+                  description: Success
+                  schema:
+                    $ref: '#/definitions/InventoryResponse'
+                '500':
+                  description: Internal server error
+        definitions:
+          InventoryResponse:
+            type: object
+            properties:
+              productID:
+                type: string
+              merchant:
+                type: string
+              minimumInventory:
+                type: integer
+        

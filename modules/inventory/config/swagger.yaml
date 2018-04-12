@@ -1,0 +1,102 @@
+swagger: '2.0'
+info:
+  description: Inventory - REST Endpoints
+  version: 1.15.0-SNAPSHOT
+  title: Inventory
+basePath: /inventory/
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /v1/walmart:
+    get:
+      tags:
+        - Inventory
+      summary: Pre-Inventory data for the login UI
+      description: 'Pre-Inventory information, for example whether the user needs to be challenged with a CAPTCHA'
+      operationId: "getWalmartInventory"
+      parameters:
+        - name: url
+          in: query
+          description: The product id we need to check inventory for
+          required: false
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/InventoryResponse'
+        500:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+  /v1/fleetfarm:
+    get:
+      tags:
+        - Inventory
+      summary: Pre-Inventory data for the login UI
+      description: 'Pre-Inventory information, for example whether the user needs to be challenged with a CAPTCHA'
+      operationId: "getFleetfarmInventory"
+      parameters:
+        - name: url
+          in: query
+          description: The product id we need to check inventory for
+          required: false
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/InventoryResponse'
+        500:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+definitions:
+  Error:  
+    allOf:
+    - type: "object"
+      properties:
+        code:
+          type: "string"
+          description: "Error code, if applicable"
+        status:
+          type: "integer"
+          format: "int32"
+          description: "HTTP status code"
+    - $ref: "#/definitions/ApiResponse"
+  ApiResponse:
+    type: "object"
+    required:
+    - "timestamp"
+    - "txnId"
+    discriminator: "txnId"
+    properties:
+      txnId:
+        type: "string"
+        description: "Transaction ID"
+      timestamp:
+        type: "string"
+        format: "date-time"
+        description: "Timestamp of response"
+      message:
+        type: "string"
+        description: "Human readable description of response"
+  InventoryResponse:
+    type: "object"
+    properties:
+      productID:
+          type: "string"
+      merchant:
+          type: "string"
+      minimumInventory:
+          type: "integer"
