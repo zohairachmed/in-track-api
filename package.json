@@ -1,8 +1,11 @@
 {
   "name": "in-track-api",
+  "engines": {
+    "node": "8.2.1"
+  },
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "node ait api",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,8 +20,20 @@
   },
   "homepage": "https://github.com/zohairachmed/in-track-api#readme",
   "dependencies": {
-    "fs": "0.0.1-security",
-    "hapi": "^17.3.1",
-    "mongoose": "^5.0.14"
+    "blipp": "^2.3.0",
+    "cheerio": "^1.0.0-rc.2",
+    "debug": "^3.1.0",
+    "dotenv": "^4.0.0",
+    "glue": "^4.2.1",
+    "h2o2": "^5.4.0",
+    "hapi": "^16.6.2",
+    "hapi-auth-jwt2": "^7.4.1",
+    "hapi-swaggered-ui": "^2.6.2",
+    "inert": "^4.1.0",
+    "jsdom": "^11.7.0",
+    "mongoose": "^5.0.14",
+    "path": "^0.12.7",
+    "swaggerize-hapi": "^2.0.1",
+    "vision": "^4.1.1"
   }
 }

@@ -1,0 +1,10 @@
+{
+    "name": "inventory",
+    "description": "",
+    "version": "0.0.1",
+    "dependencies": {
+        "hapi": "^16.4.2",
+        "hapi-swaggered-ui": "^2.6.0",
+        "swaggerize-hapi": "^2.0.1"
+    }
+}
