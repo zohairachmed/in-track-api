@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: Inventory - REST Endpoints
-  version: 1.15.0-SNAPSHOT
+  version: 1.0.0
   title: Inventory
 basePath: /inventory/
 consumes:
@@ -13,8 +13,8 @@ paths:
     get:
       tags:
         - Inventory
-      summary: Pre-Inventory data for the login UI
-      description: 'Pre-Inventory information, for example whether the user needs to be challenged with a CAPTCHA'
+      summary: ''
+      description: ''
       operationId: "getWalmartInventory"
       parameters:
         - name: url
@@ -39,8 +39,8 @@ paths:
     get:
       tags:
         - Inventory
-      summary: Pre-Inventory data for the login UI
-      description: 'Pre-Inventory information, for example whether the user needs to be challenged with a CAPTCHA'
+      summary: ''
+      description: ''
       operationId: "getFleetfarmInventory"
       parameters:
         - name: url

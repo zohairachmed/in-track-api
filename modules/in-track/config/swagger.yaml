@@ -1,21 +1,21 @@
 swagger: '2.0'
 info:
-  description: Inventory - REST Endpoints
-  version: 1.15.0-SNAPSHOT
-  title: Inventory
+  description: In-Track - REST Endpoints
+  version: 1.0.0
+  title: In-Track
 basePath: /in-track/
 consumes:
 - "application/json"
 produces:
 - "application/json"
 paths:
-  /v1/walmart:
+  /v1/list:
     get:
       tags:
-        - Inventory
-      summary: Pre-Inventory data for the login UI
-      description: 'Pre-Inventory information, for example whether the user needs to be challenged with a CAPTCHA'
-      operationId: "getWalmartInventory"
+        - CRUD Operations
+      summary: ''
+      description: ''
+      operationId: "getSheetsList"
       parameters:
         - name: url
           in: query
@@ -35,13 +35,13 @@ paths:
           description: "Used for a 500 HTTP response - Internal server error"
           schema:
             $ref: "#/definitions/Error"
-  /v1/fleetfarm:
+  /v1/sheets:
     get:
       tags:
-        - Inventory
-      summary: Pre-Inventory data for the login UI
-      description: 'Pre-Inventory information, for example whether the user needs to be challenged with a CAPTCHA'
-      operationId: "getFleetfarmInventory"
+        - CRUD Operations
+      summary: ''
+      description: ''
+      operationId: "getSheetData"
       parameters:
         - name: url
           in: query
