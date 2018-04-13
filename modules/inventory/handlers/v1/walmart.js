@@ -34,22 +34,32 @@ module.exports = {
 
                 let totalNumberOfItems = 0;
 
-                ch(".visuallyhidden option").each(function (i, elem) {
-                    if (!isNaN(ch(elem).val())) {
-                        debug(`Item  ${i}: ${ch(elem).val()}`);
-                        totalNumberOfItems += 1;
-                    }
-                });
+                var urgencyMsg = ch(".prod-ProductOffer-urgencyMsg").html();
 
-                debug(`Total number of items: ${totalNumberOfItems}`);
+                if (urgencyMsg && urgencyMsg.length > 0) {
+                    console.log(`Urgency Message: ${urgencyMsg}`);
+                    let finalResponse = urgencyMsg.replace(/[^0-9]/g, '');
+                    console.log(finalResponse);
+                    response.minimumInventory = finalResponse;
+                }
+                else {
+                    ch(".visuallyhidden option").each(function (i, elem) {
+                        if (!isNaN(ch(elem).val())) {
+                            debug(`Item  ${i}: ${ch(elem).val()}`);
+                            totalNumberOfItems += 1;
+                        }
+                    });
 
-                response.minimumInventory = totalNumberOfItems;
+                    debug(`Total number of items: ${totalNumberOfItems}`);
+
+                    response.minimumInventory = totalNumberOfItems;
+                }
 
                 reply(response).code(200);
+
             }).catch(error => {
                 debug(`${error}`);
                 reply().code(500);
-                Ï
             });
         }
     }
