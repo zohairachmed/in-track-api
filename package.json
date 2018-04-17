@@ -31,7 +31,7 @@
     "hapi-swaggered-ui": "^2.6.2",
     "inert": "^4.1.0",
     "jsdom": "^11.7.0",
-    "mongoose": "^5.0.14",
+    "mongoose": "^5.0.4",
     "path": "^0.12.7",
     "puppeteer": "^1.2.0",
     "swaggerize-hapi": "^2.0.1",
