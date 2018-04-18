@@ -4,6 +4,7 @@ const Path = require('path');
 const config = require('./modules/config');
 const fs = require('fs');
 const debug = require('debug')('server');
+const store = require('./modules/data-store')
 require('dotenv').config();
 
 var tls;
@@ -68,6 +69,9 @@ const manifest = {
             plugin: 'blipp'
         },
         {
+            plugin: './modules/data-store'
+        },
+        {
             plugin: {
                 register: './modules/inventory'
             }
@@ -91,6 +95,10 @@ Glue.compose(manifest, options, (err, server) => {
 
     server.start(() => {
         debug('Server is running.');
+
+        var sheets = store.getAllSheets();
+
+        console.log(sheets);
     });
 });
 

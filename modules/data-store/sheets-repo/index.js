@@ -1,5 +1,5 @@
 'use strict';
-const MongoProvider = require('../../mongo-utils');
+const MongoProvider = require('../mongo-utils');
 const mongoose = require('mongoose');
 const debug = require('debug')('AccountRepo');
 
@@ -7,6 +7,59 @@ module.exports = function () {
     debug('AccountRepo - Initializing repository');
 
     const sheetModelName = 'Intrack-Sheets';
+
+    let SheetDataSchema = new mongoose.Schema({
+        inventory: {
+            type: Number,
+            required: false,
+            default: 0
+        },
+        title: {
+            type: String,
+            required: true
+        },
+        listingPrice: {
+            type: mongoose.Schema.Types.Decimal128,
+            required: false
+        },
+        supplierName: {
+            type: String,
+            required: false
+        },
+        supplierPrice: {
+            type: mongoose.Schema.Types.Decimal128,
+            required: false
+        },
+        listingFee: {
+            type: mongoose.Schema.Types.Decimal128,
+            required: false
+        },
+        tax: {
+            type: mongoose.Schema.Types.Decimal128,
+            required: false
+        },
+        shipping: {
+            type: mongoose.Schema.Types.Decimal128,
+            required: false
+        },
+        profit: {
+            type: mongoose.Schema.Types.Decimal128,
+            required: false
+        },
+        profitMargin: {
+            type: mongoose.Schema.Types.Decimal128,
+            required: false
+        },
+        listingUrl: {
+            type: String,
+            required: true
+        },
+        supplierUrl: {
+            type: String,
+            required: true
+        },
+    });
+
     let SheetInfoSchema = new mongoose.Schema({
         sheetId: {
             type: String,
@@ -33,63 +86,13 @@ module.exports = function () {
             default: true
         },
         updated: {
-            type: Date, 
+            type: Date,
             default: Date.now
         },
         data: [SheetDataSchema]
     });
 
-    let SheetDataSchema = new mongoose.Schema({
-        inventory: {
-            type: Number,
-            required: false,
-            default: 0
-        },
-        title: {
-            type: String,
-            required: true
-        },
-        listingPrice: {
-            type: Schema.Types.Decimal128,
-            required: false
-        },
-        supplierName: {
-            type: String,
-            required: false
-        },
-        supplierPrice: {
-            type: Schema.Types.Decimal128,
-            required: false
-        },
-        listingFee: {
-            type: Schema.Types.Decimal128,
-            required: false
-        },
-        tax: {
-            type: Schema.Types.Decimal128,
-            required: false
-        },
-        shipping: {
-            type: Schema.Types.Decimal128,
-            required: false
-        },
-        profit: {
-            type: Schema.Types.Decimal128,
-            required: false
-        },
-        profitMargin: {
-            type: Schema.Types.Decimal128,
-            required: false
-        },
-        listingUrl: {
-            type: String,
-            required: true
-        },
-        supplierUrl: {
-            type: String,
-            required: true
-        },
-    });
+
 
 
     // define the mock account schema
@@ -373,14 +376,27 @@ module.exports = function () {
     };
 
     let getAllSheets = () => {
-        let Sheets = mongoose.model(sheetModelName);
+        // let Sheets = mongoose.model('in_track_inventory');
 
-        const getAllQuery = Sheets.find({}).then((result) => {
-            debug(`Retrieved ${result.length} mock accounts`);
-            return result;
-        }).catch((error) => {
-            debug(`Error retrieving mock accounts. Error: ${JSON.stringify(error)}`);
-            return error;
+        // const getAllQuery = Sheets.find({}).then((result) => {
+        //     debug(`Retrieved ${result.length} mock accounts`);
+        //     return result;
+        // }).catch((error) => {
+        //     debug(`Error retrieving mock accounts. Error: ${JSON.stringify(error)}`);
+        //     return error;
+        // });
+
+        var connection = mongoose.connection;
+
+        connection.on('error', console.error.bind(console, 'connection error:'));
+        connection.once('open', function () {
+
+            connection.db.collection("in_track_inventory", function (err, collection) {
+                collection.find({}).toArray(function (err, data) {
+                    console.log(data); // it will print your collection data
+                })
+            });
+
         });
 
         return getAllQuery;

@@ -1,7 +1,6 @@
 {
-    "name": "data-store",
-    "version": "0.0.1",
-    "main": "index.js",
-    "dependencies": {
-    }
-  }
+  "name": "data-store",
+  "version": "0.0.1",
+  "main": "index.js",
+  "dependencies": {}
+}

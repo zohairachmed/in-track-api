@@ -6,7 +6,8 @@ const debug = require('debug')('MongoProvider');
 module.exports = function () {
     debug('MongoProvider - Initializing connection');
 
-    let dbURI = `mongodb://${Config.db.host}:${Config.db.port}/${Config.db.name}`;
+    //let dbURI = `mongodb://${Config.db.host}:${Config.db.port}/${Config.db.name}`;
+    let dbURI = 'mongodb://sheikhziad:' + encodeURIComponent('bridgePORT1#') + '@angulardata-shard-00-00-yyudc.mongodb.net:27017,angulardata-shard-00-01-yyudc.mongodb.net:27017,angulardata-shard-00-02-yyudc.mongodb.net:27017/in-track?ssl=true&replicaSet=AngularData-shard-0&authSource=admin';
 
     mongoose.connect(dbURI, {
         server: {
