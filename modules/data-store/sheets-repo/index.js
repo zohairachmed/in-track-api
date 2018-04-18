@@ -9,6 +9,10 @@ module.exports = function () {
     const sheetInfoModelName = 'IntrackSheets';
 
     let SheetDataSchema = new mongoose.Schema({
+        rowId: {
+            type: Number,
+            required: true
+        },
         inventory: {
             type: Number,
             required: false,
@@ -136,6 +140,7 @@ module.exports = function () {
             if (data.Handsondata && data.Handsondata.length) {
                 for (let i = 0; i < data.Handsondata.length; i++) {
                     newSheetInfo.data.push({
+                        rowId : data.Handsondata[i].rowId || i,
                         inventory: data.Handsondata[i].Inventory || 0,
                         title: data.Handsondata[i].Title || '',
                         listingPrice: data.Handsondata[i].AmazonListingPrice || 0,

@@ -88,7 +88,7 @@ paths:
         description: "The credit card update data"
         required: true
         schema:
-          $ref: "#/definitions/SheetInfo"
+          $ref: "#/definitions/SheetDetails"
       responses:
         200:
           description: "A response describing status of the payment method update"
@@ -126,10 +126,10 @@ paths:
         format: "string"
       - in: "body"
         name: "sheetUpdate"
-        description: "The credit card update data"
+        description: "The sheet update data"
         required: true
         schema:
-          $ref: "#/definitions/SheetInfo"
+          $ref: "#/definitions/SheetDetails"
       responses:
         200:
           description: "A response describing status of the payment method update"
@@ -226,12 +226,75 @@ definitions:
     type: "object"
     properties:
       sheetId:
-          type: "string"
+        type: "string"
       sheetName:
-          type: "string"
+        type: "string"
       sheetDate:
-          type: "string"
+        type: "string"
       sheetNotes:
-          type: "string"
+        type: "string"
       ongoing:
+        type: "string"
+  SheetDetails:
+    allOf: 
+      - $ref": "#/definitions/SheetInfo"
+  SheetData:
+    type: "object"
+    properties:
+      statements:
+        type: "array"
+        items:
+          $ref: "#/definitions/SheetMetaData"
+  SheetMetaData:
+    type: "array"
+    items:
+      properties:
+        rowId:
           type: "string"
+          description: "The unique resource identifier of the line associated with this row"
+        inventory:
+          type: "integer"
+          format: "int32"
+          description: "The total"
+        title:
+          type: "string"
+          description: "The title"
+        listingPrice:
+          type: "number"
+          format: "double"
+          description: "The total"
+        supplierName:
+          type: "string"
+          description: "The title"
+        supplierPrice:
+          type: "number"
+          format: "double"
+          description: "The total"
+        listingFee:
+          type: "number"
+          format: "double"
+          description: "The total"
+        tax:
+          type: "number"
+          format: "double"
+          description: "The total"
+        shipping:
+          type: "number"
+          format: "double"
+          description: "The total"
+        profit:
+          type: "number"
+          format: "double"
+          description: "The total"
+        profitMargin:
+          type: "number"
+          format: "double"
+          description: "The total"
+        listingUrl:
+          type: "string"
+          description: "The title"
+        supplierUrl:
+          type: "string"
+          description: "The title"
+    description: "A line level breakdown of sheet items"
+      
