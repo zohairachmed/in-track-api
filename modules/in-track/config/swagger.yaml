@@ -43,7 +43,7 @@ paths:
       description: ''
       operationId: "getSheetData"
       parameters:
-        - name: url
+        - name: sheetId
           in: query
           description: The product id we need to check inventory for
           required: false
@@ -53,6 +53,97 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/InventoryResponse'
+        401:
+          description: "Used for a 401 HTTP response - Client not authenticated"
+          schema:
+            $ref: "#/definitions/Error"
+        403:
+          description: "The logged-in user is not permitted to perform the current\
+            \ operation."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+    put:
+      tags:
+      - CRUD Operations
+      summary: "Update the payment method metadata associated and token for an account"
+      description: "Allows you to update the payment method associated with an account"
+      operationId: "updatePaymentMethod"
+      parameters:
+      - name: "token"
+        in: "header"
+        description: "The user's session identifier"
+        required: false
+        type: "string"
+        format: "string"
+      - in: "body"
+        name: "updateSheetInfo"
+        description: "The credit card update data"
+        required: true
+        schema:
+          $ref: "#/definitions/SheetInfo"
+      responses:
+        200:
+          description: "A response describing status of the payment method update"
+          schema:
+            $ref: "#/definitions/TokenAcceptanceResponse"
+        401:
+          description: "Used for a 401 HTTP response - Client not authenticated"
+          schema:
+            $ref: "#/definitions/Error"
+        403:
+          description: "The logged-in user is not permitted to perform the current\
+            \ operation."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+    post:
+      tags:
+      - CRUD Operations
+      summary: "Update the payment method metadata associated and token for an account"
+      description: "Allows you to update the payment method associated with an account"
+      operationId: "createSheetInfo"
+      parameters:
+      - name: "token"
+        in: "header"
+        description: "The user's session identifier"
+        required: false
+        type: "string"
+        format: "string"
+      - in: "body"
+        name: "sheetUpdate"
+        description: "The credit card update data"
+        required: true
+        schema:
+          $ref: "#/definitions/SheetInfo"
+      responses:
+        200:
+          description: "A response describing status of the payment method update"
+          schema:
+            $ref: "#/definitions/TokenAcceptanceResponse"
+        401:
+          description: "Used for a 401 HTTP response - Client not authenticated"
+          schema:
+            $ref: "#/definitions/Error"
+        403:
+          description: "The logged-in user is not permitted to perform the current\
+            \ operation."
+          schema:
+            $ref: "#/definitions/Error"
         500:
           description: "Used for a 500 HTTP response - Internal server error"
           schema:
@@ -91,6 +182,30 @@ definitions:
       message:
         type: "string"
         description: "Human readable description of response"
+  TokenAcceptanceResponse:
+    allOf:
+    - $ref: "#/definitions/TokenAcceptance"
+    - $ref: "#/definitions/ApiResponse"
+  TokenAcceptance:
+    type: "object"
+    properties:
+      decision:
+        type: "string"
+        example: "ACCEPT"
+        description: "Result of the overall request. Possible values: [ACCEPT, ERROR, REJECT]"
+        enum:
+        - "ACCEPT"
+        - "ERROR"
+        - "REJECT"
+      reasonCode:
+        type: "number"
+        example: 123.0
+        description: "Numeric value corresponding to the result of the request."
+      reasonMessage:
+        type: "string"
+        example: "Something is wrong with token"
+        description: "Text description to the reasonCode. Values are currently unknown."
+    description: "The result of the operation obtained from update."
   InventoryResponse:
     type: "object"
     properties:
