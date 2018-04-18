@@ -6,7 +6,7 @@ const debug = require('debug')('AccountRepo');
 module.exports = function () {
     debug('AccountRepo - Initializing repository');
 
-    const sheetModelName = 'Intrack-Sheets';
+    const sheetInfoModelName = 'IntrackSheets';
 
     let SheetDataSchema = new mongoose.Schema({
         inventory: {
@@ -91,6 +91,184 @@ module.exports = function () {
         },
         data: [SheetDataSchema]
     });
+
+    mongoose.model(sheetInfoModelName, SheetInfoSchema);
+
+
+    let getSheet= (sheetId) => {
+        let SheetInfoModel = mongoose.model(sheetInfoModelName);
+
+        debug(`Getting ${sheetId} from repository`);
+        let criteria = {
+            sheetId: sheetId
+        };
+        let query = SheetInfoModel.findOne(criteria);
+        return query.exec()
+            .then((queryResponse) => {
+                if (queryResponse) {
+                    debug(`Found sheet with name ${sheetId}`);
+                } else {
+                    debug(`Unable to find sheet with id ${sheetId}`);
+                }
+                return queryResponse;
+            });
+    };
+
+    let addSheet = (sheetId, data) => {
+        let SheetInfoModel = mongoose.model(sheetInfoModelName);
+
+        const getOrCreate = (sheetInfo) => {
+            if (sheetInfo) {
+                debug(`AddSheet - Sheet with GUID ${sheetId} already exists in repository`);
+                return sheetInfo;
+            }
+
+            debug(`AddSheet - Adding account ${accountGUID} to repository`);
+            let newSheetInfo = new SheetInfoModel();
+            newSheetInfo.sheetId = data.Id;
+            newSheetInfo.sheetName = data.SheetName;
+            newSheetInfo.sheetDate = data.Date;
+            newSheetInfo.sheetNotes = data.Notes;
+            newSheetInfo.active = data.Ongoing;
+
+            // contacts
+            newSheetInfo.data = [];
+            if (data.Handsondata && data.Handsondata.length) {
+                for (let i = 0; i < data.Handsondata.length; i++) {
+                    newSheetInfo.data.push({
+                        inventory: data.Handsondata[i].Inventory || 0,
+                        title: data.Handsondata[i].Title || '',
+                        listingPrice: data.Handsondata[i].AmazonListingPrice || 0,
+                        supplierName: data.Handsondata[i].SupplierName || 0,
+                        supplierPrice: data.Handsondata[i].SupplierPrice || 0,
+                        listingFee: data.Handsondata[i].AmazonFee || 0,
+                        tax: data.Handsondata[i].Taxes || 0,
+                        shipping: data.Handsondata[i].ShippingFee || 0,
+                        profit: data.Handsondata[i].Profit || 0,
+                        profitMargin: data.Handsondata[i].ProfitMargin || 0,
+                        listingUrl: data.Handsondata[i].AmazonUrl || '',
+                        supplierUrl: data.Handsondata[i].SupplierUrl || ''
+                    });
+                }
+            }
+
+            debug(`Adding sheet: ${JSON.stringify(newSheetInfo)}`);
+            let save = newSheetInfo.save()
+                .then((result) => {
+                    debug(`Sheet added to repository: ${JSON.stringify(result)}`);
+                    return getSheetByID(result.sheetId);
+                }).catch((error) => {
+                    debug(`Error adding sheet to repository! Error: ${JSON.stringify(error)}`);
+                    throw error;
+                });
+            return save;
+        };
+
+        return getSheet(sheetId)
+            .then(getOrCreate);
+    };
+
+    let getAllSheets = () => {
+        let SheetInfoModel = mongoose.model(sheetInfoModelName);
+
+        const getAllQuery = SheetInfoModel.find({}).then((result) => {
+            debug(`Retrieved ${result.length} sheets`);
+            return result;
+        }).catch((error) => {
+            debug(`Error retrieving sheets. Error: ${JSON.stringify(error)}`);
+            return error;
+        });
+
+        return getAllQuery;
+    };
+
+    let updateSheet = (sheetId, data) => {
+        const update = (sheetInfo) => {
+            if (!sheetInfo) {
+                throw (`Unable to update sheet ${sheetId} as it does not exist in the repository`);
+            }
+
+            debug(`UpdateAccount - Updating account ${sheetId} in repository`);
+            // if (data) {
+            //     debug(`UpdateSheet - Updating data for account ${accountGUID}`);
+            //     sheetInfo.name = data.name;
+            //     sheetInfo.description = data.description;
+
+            //     repoAccount.streetAddress1 = data.streetAddress1 || "";
+            //     repoAccount.streetAddress2 = data.streetAddress2 || "";
+            //     repoAccount.city = data.city || "";
+            //     repoAccount.state = data.state || "";
+            //     repoAccount.zipCode = data.zipCode || "";
+
+            //     // contacts
+            //     repoAccount.contacts = [];
+            //     if (data.contacts && data.contacts.length) {
+            //         for (let i = 0; i < data.contacts.length; i++) {
+            //             repoAccount.contacts.push({
+            //                 contactType: data.contacts[i].contactType,
+            //                 firstName: data.contacts[i].firstName,
+            //                 lastName: data.contacts[i].lastName,
+            //                 phoneNumber: data.contacts[i].phoneNumber,
+            //                 email: data.contacts[i].email,
+            //             });
+            //         }
+            //     }
+
+            //     // service accounts
+            //     repoAccount.serviceAccounts = [];
+            //     for (let i = 0; i < data.serviceAccounts.length; i++) {
+            //         let newServiceAccount = {
+            //             legacyCompany: data.serviceAccounts[i].legacyCompany,
+            //             serviceAccountId: data.serviceAccounts[i].serviceAccountId,
+            //             serviceType: data.serviceAccounts[i].serviceType
+            //         };
+            //         repoAccount.serviceAccounts.push(newServiceAccount);
+            //     }
+
+            //     // users
+            //     if (data.users && data.users.length && data.users.length > 0) {
+            //         repoAccount.users = data.users;
+            //     }
+
+            //     //debug(`Incoming data: ${JSON.stringify(data)}; Updated Account: ${JSON.stringify(repoAccount)}`);
+            // }
+
+            // let persistUpdate = repoAccount.save()
+            //     .then((result) => {
+            //         debug(`Account ${accountGUID} updated in repository`);
+            //         //return getAccount(result.portalAccountGUID);
+            //         return getAccount(accountGUID);
+            //     }).catch((error) => {
+            //         debug(`Error updating accont in repository! AccountGUID: ${accountGUID}; Error: ${JSON.stringify(error)}`);
+            //         throw error;
+            //     });
+
+            return data;
+        };
+
+        return getSheet(sheetId)
+            .then(update);
+    };
+
+    let deleteSheet = (sheetId) => {
+        let SheetInfoModel = mongoose.model(sheetInfoModelName);
+
+        debug(`Deleting Sheet with ${sheetId} from repository`);
+        let criteria = {
+            sheetId: sheetId
+        };
+        const remove = SheetInfoModel.remove(criteria)
+            .then((result) => {
+                debug(`Deleted sheet ${sheetId}. Result: ${JSON.stringify(result)}`);
+                return result;
+            }).catch((error) => {
+                debug(`Error deleting sheet ${sheetId}. Error: ${JSON.stringify(error)}`);
+                throw error;
+            });
+
+        return remove;
+    };
+
 
 
 
@@ -375,33 +553,6 @@ module.exports = function () {
         return remove;
     };
 
-    let getAllSheets = () => {
-        // let Sheets = mongoose.model('in_track_inventory');
-
-        // const getAllQuery = Sheets.find({}).then((result) => {
-        //     debug(`Retrieved ${result.length} mock accounts`);
-        //     return result;
-        // }).catch((error) => {
-        //     debug(`Error retrieving mock accounts. Error: ${JSON.stringify(error)}`);
-        //     return error;
-        // });
-
-        var connection = mongoose.connection;
-
-        connection.on('error', console.error.bind(console, 'connection error:'));
-        connection.once('open', function () {
-
-            connection.db.collection("in_track_inventory", function (err, collection) {
-                collection.find({}).toArray(function (err, data) {
-                    console.log(data); // it will print your collection data
-                })
-            });
-
-        });
-
-        return getAllQuery;
-    };
-
     let getAllAccounts = () => {
         let MockAccount = mongoose.model(mockAccountModelName);
 
@@ -455,33 +606,33 @@ module.exports = function () {
     };
 
     return {
-        add: (accountGUID, data) => {
+        add: (sheetId, data) => {
             return MongoProvider.connectionPromise.then(() => {
-                return addAccount(accountGUID, data);
+                return addSheet(sheetId, data);
             });
         },
-        get: (accountGUID) => {
+        get: (sheetId) => {
             return MongoProvider.connectionPromise.then(() => {
-                return getAccount(accountGUID);
+                return getSheet(accountGUID);
             });
         },
-        getByName: (accountName) => {
-            return MongoProvider.connectionPromise.then(() => {
-                return getAccountByName(accountName);
-            });
-        },
-        update: (accountGUID, data) => {
+        // getByName: (accountName) => {
+        //     return MongoProvider.connectionPromise.then(() => {
+        //         return getAccountByName(accountName);
+        //     });
+        // },
+        update: (sheetId, data) => {
             debug('calling update mock account in repo');
 
             return MongoProvider.connectionPromise.then(() => {
                 debug('calling update mock account in repo');
 
-                return updateMockAccount(accountGUID, data);
+                return updateSheet(sheetId, data);
             });
         },
-        delete: (accountGUID) => {
+        delete: (sheetId) => {
             return MongoProvider.connectionPromise.then(() => {
-                return deleteAccount(accountGUID);
+                return deleteSheet(sheetId);
             });
         },
         getAll: () => {
@@ -489,11 +640,11 @@ module.exports = function () {
                 return getAllSheets();
             });
         },
-        getAccountsForUser: (username) => {
-            return MongoProvider.connectionPromise.then(() => {
-                return getAccountsForUser(username);
-            });
-        },
+        // getAccountsForUser: (username) => {
+        //     return MongoProvider.connectionPromise.then(() => {
+        //         return getAccountsForUser(username);
+        //     });
+        // },
         deleteAll: () => {
             return MongoProvider.connectionPromise.then(() => {
                 return deleteAllAccounts();

@@ -95,10 +95,6 @@ Glue.compose(manifest, options, (err, server) => {
 
     server.start(() => {
         debug('Server is running.');
-
-        var sheets = store.getAllSheets();
-
-        console.log(sheets);
     });
 });
 
