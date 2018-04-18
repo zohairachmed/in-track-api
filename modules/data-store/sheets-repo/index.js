@@ -6,6 +6,92 @@ const debug = require('debug')('AccountRepo');
 module.exports = function () {
     debug('AccountRepo - Initializing repository');
 
+    const sheetModelName = 'Intrack-Sheets';
+    let SheetInfoSchema = new mongoose.Schema({
+        sheetId: {
+            type: String,
+            unique: true,
+            required: true,
+            dropDups: true
+        },
+        sheetName: {
+            type: String,
+            required: true
+        },
+        sheetDate: {
+            type: Date,
+            required: true,
+            default: Date.now
+        },
+        sheetNotes: {
+            type: String,
+            required: true
+        },
+        active: {
+            type: Boolean,
+            required: true,
+            default: true
+        },
+        updated: {
+            type: Date, 
+            default: Date.now
+        },
+        data: [SheetDataSchema]
+    });
+
+    let SheetDataSchema = new mongoose.Schema({
+        inventory: {
+            type: Number,
+            required: false,
+            default: 0
+        },
+        title: {
+            type: String,
+            required: true
+        },
+        listingPrice: {
+            type: Schema.Types.Decimal128,
+            required: false
+        },
+        supplierName: {
+            type: String,
+            required: false
+        },
+        supplierPrice: {
+            type: Schema.Types.Decimal128,
+            required: false
+        },
+        listingFee: {
+            type: Schema.Types.Decimal128,
+            required: false
+        },
+        tax: {
+            type: Schema.Types.Decimal128,
+            required: false
+        },
+        shipping: {
+            type: Schema.Types.Decimal128,
+            required: false
+        },
+        profit: {
+            type: Schema.Types.Decimal128,
+            required: false
+        },
+        profitMargin: {
+            type: Schema.Types.Decimal128,
+            required: false
+        },
+        listingUrl: {
+            type: String,
+            required: true
+        },
+        supplierUrl: {
+            type: String,
+            required: true
+        },
+    });
+
+
     // define the mock account schema
     const mockAccountModelName = 'Figaro-Entpor-MockAccount';
     let ServiceAccountSchema = new mongoose.Schema({
@@ -211,7 +297,7 @@ module.exports = function () {
                 repoAccount.name = data.name;
                 repoAccount.description = data.description;
 
-                repoAccount.streetAddress1 = data.streetAddress1 || "";                
+                repoAccount.streetAddress1 = data.streetAddress1 || "";
                 repoAccount.streetAddress2 = data.streetAddress2 || "";
                 repoAccount.city = data.city || "";
                 repoAccount.state = data.state || "";
@@ -284,6 +370,20 @@ module.exports = function () {
             });
 
         return remove;
+    };
+
+    let getAllSheets = () => {
+        let Sheets = mongoose.model(sheetModelName);
+
+        const getAllQuery = Sheets.find({}).then((result) => {
+            debug(`Retrieved ${result.length} mock accounts`);
+            return result;
+        }).catch((error) => {
+            debug(`Error retrieving mock accounts. Error: ${JSON.stringify(error)}`);
+            return error;
+        });
+
+        return getAllQuery;
     };
 
     let getAllAccounts = () => {
@@ -370,7 +470,7 @@ module.exports = function () {
         },
         getAll: () => {
             return MongoProvider.connectionPromise.then(() => {
-                return getAllAccounts();
+                return getAllSheets();
             });
         },
         getAccountsForUser: (username) => {
