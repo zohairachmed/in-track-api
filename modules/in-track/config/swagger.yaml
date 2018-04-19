@@ -35,7 +35,7 @@ paths:
           description: "Used for a 500 HTTP response - Internal server error"
           schema:
             $ref: "#/definitions/Error"
-  /v1/sheets:
+  /v1/sheets/{sheetId}:
     get:
       tags:
         - CRUD Operations
@@ -73,8 +73,8 @@ paths:
     put:
       tags:
       - CRUD Operations
-      summary: "Update the payment method metadata associated and token for an account"
-      description: "Allows you to update the payment method associated with an account"
+      summary: "Update the sheet"
+      description: "Allows you to update the sheet"
       operationId: "updatePaymentMethod"
       parameters:
       - name: "token"
@@ -114,8 +114,8 @@ paths:
     post:
       tags:
       - CRUD Operations
-      summary: "Update the payment method metadata associated and token for an account"
-      description: "Allows you to update the payment method associated with an account"
+      summary: "Create sheet"
+      description: "Allows you to create a new sheet"
       operationId: "createSheetInfo"
       parameters:
       - name: "token"
@@ -247,6 +247,14 @@ definitions:
       sheetNotes:
         type: "string"
       ongoing:
+        type: "string"
+      updated:
+        type: "string"
+      updatedBy:
+        type: "string"
+      created:
+        type: "string"
+      createdBy:
         type: "string"
       data:
         type: "array"

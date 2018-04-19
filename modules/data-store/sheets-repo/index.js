@@ -139,13 +139,17 @@ module.exports = function () {
                 return sheetInfo;
             }
 
-            debug(`AddSheet - Adding account ${accountGUID} to repository`);
+            debug(`AddSheet - Adding account ${sheetId} to repository`);
             let newSheetInfo = new SheetInfoModel();
             newSheetInfo.sheetId = data.Id;
             newSheetInfo.sheetName = data.SheetName;
             newSheetInfo.sheetDate = data.Date;
             newSheetInfo.sheetNotes = data.Notes;
             newSheetInfo.active = data.Ongoing;
+            newSheetInfo.updated = data.updated;
+            newSheetInfo.updatedBy = data.updatedBy;
+            newSheetInfo.created = data.created;
+            newSheetInfo.createdBy = data.createdBy;
 
             // contacts
             newSheetInfo.data = [];
