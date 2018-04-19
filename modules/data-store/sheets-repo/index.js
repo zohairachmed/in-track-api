@@ -93,6 +93,18 @@ module.exports = function () {
             type: Date,
             default: Date.now
         },
+        updatedBy: {
+            type: String,
+            required: true
+        },
+        created: {
+            type: Date,
+            default: Date.now
+        },
+        createdBy: {
+            type: String,
+            required: true
+        },
         data: [SheetDataSchema]
     });
 
