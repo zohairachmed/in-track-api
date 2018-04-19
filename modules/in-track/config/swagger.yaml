@@ -236,8 +236,22 @@ definitions:
       ongoing:
         type: "string"
   SheetDetails:
-    allOf: 
-      - $ref": "#/definitions/SheetInfo"
+    type: "object"
+    properties:
+      sheetId:
+        type: "string"
+      sheetName:
+        type: "string"
+      sheetDate:
+        type: "string"
+      sheetNotes:
+        type: "string"
+      ongoing:
+        type: "string"
+      data:
+        type: "array"
+        items:
+           $ref: "#/definitions/SheetMetaData"
   SheetData:
     type: "object"
     properties:
@@ -246,55 +260,54 @@ definitions:
         items:
           $ref: "#/definitions/SheetMetaData"
   SheetMetaData:
-    type: "array"
-    items:
-      properties:
-        rowId:
-          type: "string"
-          description: "The unique resource identifier of the line associated with this row"
-        inventory:
-          type: "integer"
-          format: "int32"
-          description: "The total"
-        title:
-          type: "string"
-          description: "The title"
-        listingPrice:
-          type: "number"
-          format: "double"
-          description: "The total"
-        supplierName:
-          type: "string"
-          description: "The title"
-        supplierPrice:
-          type: "number"
-          format: "double"
-          description: "The total"
-        listingFee:
-          type: "number"
-          format: "double"
-          description: "The total"
-        tax:
-          type: "number"
-          format: "double"
-          description: "The total"
-        shipping:
-          type: "number"
-          format: "double"
-          description: "The total"
-        profit:
-          type: "number"
-          format: "double"
-          description: "The total"
-        profitMargin:
-          type: "number"
-          format: "double"
-          description: "The total"
-        listingUrl:
-          type: "string"
-          description: "The title"
-        supplierUrl:
-          type: "string"
-          description: "The title"
+    type: "object"
+    properties:
+      rowId:
+        type: "string"
+        description: "The unique resource identifier of the line associated with this row"
+      inventory:
+        type: "integer"
+        format: "int32"
+        description: "The total"
+      title:
+        type: "string"
+        description: "The title"
+      listingPrice:
+        type: "number"
+        format: "double"
+        description: "The total"
+      supplierName:
+        type: "string"
+        description: "The title"
+      supplierPrice:
+        type: "number"
+        format: "double"
+        description: "The total"
+      listingFee:
+        type: "number"
+        format: "double"
+        description: "The total"
+      tax:
+        type: "number"
+        format: "double"
+        description: "The total"
+      shipping:
+        type: "number"
+        format: "double"
+        description: "The total"
+      profit:
+        type: "number"
+        format: "double"
+        description: "The total"
+      profitMargin:
+        type: "number"
+        format: "double"
+        description: "The total"
+      listingUrl:
+        type: "string"
+        description: "The title"
+      supplierUrl:
+        type: "string"
+        description: "The title"
     description: "A line level breakdown of sheet items"
       
