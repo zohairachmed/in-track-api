@@ -10,9 +10,7 @@ module.exports = function () {
     let dbURI = 'mongodb://sheikhziad:' + encodeURIComponent('bridgePORT1#') + '@angulardata-shard-00-00-yyudc.mongodb.net:27017,angulardata-shard-00-01-yyudc.mongodb.net:27017,angulardata-shard-00-02-yyudc.mongodb.net:27017/in-track?ssl=true&replicaSet=AngularData-shard-0&authSource=admin';
 
     mongoose.connect(dbURI, {
-        server: {
-            auto_reconnect: true
-        }
+        auto_reconnect: true
     })
     let db = mongoose.connection;
 
