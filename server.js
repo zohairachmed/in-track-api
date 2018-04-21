@@ -49,7 +49,7 @@ const manifest = {
         routes: {
             cors: {
                 origin: ['*'],
-                headers: ['Accept', 'Authorization', 'Content-Type', 'If-None-Match', 'Accept-language', 'origin', 'x-csrf-token', 'x-xsrf-token', 'crumb', 'token'],
+                headers: ['Access-Control-Allow-Origin','Access-Control-Allow-Headers', 'Accept', 'Authorization', 'Content-Type', 'If-None-Match', 'Accept-language', 'origin', 'x-csrf-token', 'x-xsrf-token', 'crumb', 'token'],
                 additionalHeaders: ['x-requested-with', 'cache-control'],
                 credentials: true
             }
