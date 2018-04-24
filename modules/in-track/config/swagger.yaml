@@ -43,16 +43,16 @@ paths:
       description: ''
       operationId: "getSheetData"
       parameters:
-        - name: sheetId
-          in: query
-          description: The product id we need to check inventory for
-          required: false
-          type: string
+        - name: "sheetId"
+          in: "path"
+          description: "The product id we need to check inventory for"
+          required: true
+          type: "string"
       responses:
         200:
           description: Success
           schema:
-            $ref: '#/definitions/InventoryResponse'
+            $ref: '#/definitions/SheetDetails'
         401:
           description: "Used for a 401 HTTP response - Client not authenticated"
           schema:
@@ -83,6 +83,11 @@ paths:
         required: false
         type: "string"
         format: "string"
+      - name: "sheetId"
+        in: "path"
+        description: "The product id we need to check inventory for"
+        required: true
+        type: "string"
       - in: "body"
         name: "updateSheetInfo"
         description: "The credit card update data"

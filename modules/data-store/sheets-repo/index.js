@@ -634,7 +634,7 @@ module.exports = function () {
         },
         get: (sheetId) => {
             return MongoProvider.connectionPromise.then(() => {
-                return getSheet(accountGUID);
+                return getSheet(sheetId);
             });
         },
         // getByName: (accountName) => {

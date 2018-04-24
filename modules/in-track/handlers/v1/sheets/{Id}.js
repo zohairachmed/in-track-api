@@ -1,26 +1,10 @@
 'use strict';
 const SheetsRepo = require('../../../../data-store/sheets-repo');
-const debug = require('debug')('sheets/{sheetId}');
+const debug = require('debug')('Editsheets/{Id}');
 
 module.exports = {
     get: function (req, reply, next) {
         let sheetId = req.params.sheetId;
-
- 
-        console.log(`Getting sheets for whatever user`);
-        SheetsRepo.get(sheetId)
-            .then(sheetInfo => {
-                if (!sheetInfo) {
-                    reply().code(404);
-                } else {
-                    reply(sheetInfo).code(200);
-                }
-            })
-            .catch(error => {
-                console.log(`ERROR`);
-                console.log(error);
-                reply(error).code(500);
-            });
 
         // MockStore.getMockUser(req)
         //     .then(mockUser => {
@@ -51,7 +35,7 @@ module.exports = {
         //             reply('').code(500);
         //         }
         //     });
-        //reply('').code(501);
+        reply('').code(501);
     },
     post: function (req, reply, next) {
         let sheetId = req.params.sheetId;
