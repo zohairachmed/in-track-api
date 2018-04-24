@@ -73,6 +73,11 @@ const manifest = {
         },
         {
             plugin: {
+                register: './modules/auth'
+            }
+        },
+        {
+            plugin: {
                 register: './modules/inventory'
             }
         },
