@@ -56,11 +56,11 @@ module.exports = function () {
         },
         listingUrl: {
             type: String,
-            required: true
+            required: false
         },
         supplierUrl: {
             type: String,
-            required: true
+            required: false
         },
     });
 
@@ -82,11 +82,11 @@ module.exports = function () {
         },
         sheetNotes: {
             type: String,
-            required: true
+            required: false
         },
         active: {
             type: Boolean,
-            required: true,
+            required: false,
             default: true
         },
         updated: {
@@ -141,11 +141,11 @@ module.exports = function () {
 
             debug(`AddSheet - Adding account ${sheetId} to repository`);
             let newSheetInfo = new SheetInfoModel();
-            newSheetInfo.sheetId = data.Id;
-            newSheetInfo.sheetName = data.SheetName;
-            newSheetInfo.sheetDate = data.Date;
-            newSheetInfo.sheetNotes = data.Notes;
-            newSheetInfo.active = data.Ongoing;
+            newSheetInfo.sheetId = data.sheetId;
+            newSheetInfo.sheetName = data.sheetName;
+            newSheetInfo.sheetDate = data.sheetDate;
+            newSheetInfo.sheetNotes = data.sheetNotes;
+            newSheetInfo.active = data.active;
             newSheetInfo.updated = data.updated;
             newSheetInfo.updatedBy = data.updatedBy;
             newSheetInfo.created = data.created;
@@ -177,7 +177,7 @@ module.exports = function () {
             let save = newSheetInfo.save()
                 .then((result) => {
                     debug(`Sheet added to repository: ${JSON.stringify(result)}`);
-                    return getSheetByID(result.sheetId);
+                    return getSheet(result.sheetId);
                 }).catch((error) => {
                     debug(`Error adding sheet to repository! Error: ${JSON.stringify(error)}`);
                     throw error;
