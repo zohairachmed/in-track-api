@@ -230,6 +230,8 @@ module.exports = function () {
                 sheetInfo.created = data.created;
                 sheetInfo.createdBy = data.createdBy;
 
+                //compare the data.Handsondata vs sheetInfo.data
+
                 // // contacts
                 // repoAccount.contacts = [];
                 // if (data.contacts && data.contacts.length) {
