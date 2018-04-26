@@ -210,6 +210,7 @@ module.exports = function () {
             }
 
             debug(`UpdateAccount - Updating account ${sheetId} in repository`);
+            console.log(sheetInfo);
             // if (data) {
             //     debug(`UpdateSheet - Updating data for account ${accountGUID}`);
             //     sheetInfo.name = data.name;
