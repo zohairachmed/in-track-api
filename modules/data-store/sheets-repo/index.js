@@ -23,7 +23,7 @@ module.exports = function () {
             required: true
         },
         listingPrice: {
-            type: mongoose.Schema.Types.Decimal128,
+            type: Number,
             required: false
         },
         supplierName: {
@@ -31,27 +31,27 @@ module.exports = function () {
             required: false
         },
         supplierPrice: {
-            type: mongoose.Schema.Types.Decimal128,
+            type: Number,
             required: false
         },
         listingFee: {
-            type: mongoose.Schema.Types.Decimal128,
+            type: Number,
             required: false
         },
         tax: {
-            type: mongoose.Schema.Types.Decimal128,
+            type: Number,
             required: false
         },
         shipping: {
-            type: mongoose.Schema.Types.Decimal128,
+            type: Number,
             required: false
         },
         profit: {
-            type: mongoose.Schema.Types.Decimal128,
+            type: Number,
             required: false
         },
         profitMargin: {
-            type: mongoose.Schema.Types.Decimal128,
+            type: Number,
             required: false
         },
         listingUrl: {
@@ -152,27 +152,28 @@ module.exports = function () {
             newSheetInfo.createdBy = data.createdBy;
 
             // contacts
-            newSheetInfo.data = [];
-            if (data.Handsondata && data.Handsondata.length) {
-                for (let i = 0; i < data.Handsondata.length; i++) {
+            newSheetInfo.data = [];            
+            if (data.data && data.data.length) {
+                for (let i = 0; i < data.data.length; i++) {                    
+                   
                     newSheetInfo.data.push({
-                        rowId : data.Handsondata[i].rowId || i,
-                        inventory: data.Handsondata[i].Inventory || 0,
-                        title: data.Handsondata[i].Title || '',
-                        listingPrice: data.Handsondata[i].AmazonListingPrice || 0,
-                        supplierName: data.Handsondata[i].SupplierName || 0,
-                        supplierPrice: data.Handsondata[i].SupplierPrice || 0,
-                        listingFee: data.Handsondata[i].AmazonFee || 0,
-                        tax: data.Handsondata[i].Taxes || 0,
-                        shipping: data.Handsondata[i].ShippingFee || 0,
-                        profit: data.Handsondata[i].Profit || 0,
-                        profitMargin: data.Handsondata[i].ProfitMargin || 0,
-                        listingUrl: data.Handsondata[i].AmazonUrl || '',
-                        supplierUrl: data.Handsondata[i].SupplierUrl || ''
+                        rowId : data.data[i].rowId || i,
+                        inventory: data.data[i].inventory || 0,
+                        title: data.data[i].title || '',
+                        listingPrice: data.data[i].listingPrice || 0,
+                        supplierName: data.data[i].supplierName || 0,
+                        supplierPrice: data.data[i].supplierPrice || 0,
+                        listingFee: data.data[i].listingFee || 0,
+                        tax: data.data[i].tax || 0,
+                        shipping: data.data[i].shipping || 0,
+                        profit: data.data[i].profit || 0,
+                        profitMargin: data.data[i].profitMargin || 0,
+                        listingUrl: data.data[i].listingUrl || '',
+                        supplierUrl: data.data[i].supplierUrl || ''
                     });
                 }
             }
-
+               
             debug(`Adding sheet: ${JSON.stringify(newSheetInfo)}`);
             let save = newSheetInfo.save()
                 .then((result) => {
