@@ -169,11 +169,11 @@ module.exports = function () {
             newSheetInfo.createdBy = data.createdBy;
 
             // contacts
-            newSheetInfo.data = [];            
-            if (data.data && data.data.length) {                   
+            newSheetInfo.data = [];
+            if (data.data && data.data.length) {
                 _.times(data.data.length, function (i) {
                     newSheetInfo.data.push({
-                        rowId : data.data[i].rowId || i,
+                        rowId: data.data[i].rowId || i,
                         inventory: data.data[i].inventory || 0,
                         title: data.data[i].title || '',
                         listingPrice: data.data[i].listingPrice || 0,
@@ -189,7 +189,7 @@ module.exports = function () {
                     });
                 });
             }
-               
+
             debug(`Adding sheet: ${JSON.stringify(newSheetInfo)}`);
             let save = newSheetInfo.save()
                 .then((result) => {
@@ -215,7 +215,7 @@ module.exports = function () {
             debug(`UpdateAccount - Updating account ${sheetId} in repository`);
             console.log(sheetInfo);
             if (data) {
-                debug(`UpdateSheet - Updating data for account ${accountGUID}`);
+                debug(`UpdateSheet - Updating data for account ${sheetId}`);
                 // sheetInfo.name = data.name;
                 // sheetInfo.description = data.description;
 
@@ -229,6 +229,7 @@ module.exports = function () {
                 sheetInfo.created = data.created;
                 sheetInfo.createdBy = data.createdBy;
 
+                
                 //compare the data.Handsondata vs sheetInfo.data
 
                 // // contacts
