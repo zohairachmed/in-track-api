@@ -1,0 +1,494 @@
+swagger: "2.0"
+info:
+  description: "Auth Orchestrator provides endpoints to process authentication requests"
+  version: "0.0.1"
+  title: "Auth Orchestrator API"
+basePath: "/auth"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /v1/session/initiate:
+    post:
+      tags:
+      - "Auth"
+      summary: "Receives a request with a JWT and will validate that JWT. If it is\
+        \ then it will create the session cookies. If it isn't then it will redirect\
+        \ the user to login."
+      description: "Receives a request with a JWT and will validate that JWT. If it\
+        \ is then it will create the session cookies. If it isn't then it will redirect\
+        \ the user to login."
+      operationId: "sessionInitiate"
+      parameters:
+      - name: "token"
+        in: "header"
+        description: "The user's session identifier"
+        required: false
+        type: "string"
+        format: "string"
+      - name: "x-mobile-jwt-token"
+        in: "header"
+        description: "JWT Token to be processed."
+        required: false
+        type: "string"
+        format: "string"
+      responses:
+        302:
+          description: "Used for a 302 HTTP response - User does not have mobile line\
+            \ of business, redirect to login"
+          schema:
+            $ref: "#/definitions/SessionInitiateResponse"
+        400:
+          description: "Used for a 400 HTTP response - Malformed request (missing\
+            \ mac address)"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Used for a 401 HTTP response - Client not authenticated"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+  /v1/profile:
+    get:
+      tags:
+      - "Auth"
+      summary: "Retrieves user profile data"
+      description: "Retrieves user profile data"
+      operationId: "getProfileData"
+      parameters:
+      - name: "token"
+        in: "header"
+        description: "The user's session identifier"
+        required: false
+        type: "string"
+        format: "string"
+      responses:
+        200:
+          description: "Success along with a boolean true if the user has active mobile\
+            \ lines of business"
+          schema:
+            $ref: "#/definitions/ProfileDataResponse"
+        400:
+          description: "Used for a 400 HTTP response - Malformed request (missing\
+            \ mac address)"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Used for a 401 HTTP response - Client not authenticated"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+  /v1/authenticate:
+    post:
+      tags:
+      - "Auth"
+      summary: "Authenticates users of native apps on spectrum"
+      description: "Authenticates users of native apps on spectrum mobile without\
+        \ using Captcha validation features"
+      operationId: "authenticate"
+      parameters:
+      - in: "body"
+        name: "authenticationRequest"
+        description: "The request to authenticate a user using native app"
+        required: false
+        schema:
+          $ref: "#/definitions/AuthenticationRequest"
+      - name: "x-forwarded-for"
+        in: "header"
+        description: "X-Forwarded-For header containing IP address"
+        required: false
+        type: "string"
+        format: "string"
+      - name: "X-Original-URL"
+        in: "header"
+        description: "Original request url"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Success along with attributes of the authentication"
+          schema:
+            $ref: "#/definitions/AuthenticationTokenResponse"
+        400:
+          description: "Used for a 400 HTTP response - Malformed request (missing\
+            \ mac address)"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Used for a 401 HTTP response - Client not authenticated"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+  /v1/terms:
+    put:
+      tags:
+      - "Auth"
+      summary: "Update the customer's terms and conditions"
+      description: "Update the customer's terms and conditions"
+      operationId: "updateTerms"
+      parameters:
+      - name: "token"
+        in: "header"
+        description: "The user's session identifier"
+        required: false
+        type: "string"
+        format: "string"
+      - name: "userAcceptedTerms"
+        in: "query"
+        description: "Boolean expected to be true when terms are accepted by the user"
+        required: false
+        type: "boolean"
+      responses:
+        200:
+          description: "Success along with a TermsResponse object"
+          schema:
+            $ref: "#/definitions/TermsResponse"
+        400:
+          description: "Used for a 400 HTTP response - Malformed request (missing\
+            \ mac address)"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Used for a 401 HTTP response - Client not authenticated"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+definitions:
+  SessionInitiateResponse:
+    allOf:
+    - $ref: "#/definitions/ApiResponse"
+  Error:
+    allOf:
+    - type: "object"
+      properties:
+        code:
+          type: "string"
+          description: "Error code, if applicable"
+        status:
+          type: "integer"
+          format: "int32"
+          description: "HTTP status code"
+    - $ref: "#/definitions/ApiResponse"
+  ProfileDataResponse:
+    allOf:
+    - $ref: "#/definitions/ProfileData"
+    - $ref: "#/definitions/ApiResponse"
+  AuthenticationRequest:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+        example: "john.doe@in-track.com"
+        description: "the username of the account"
+      password:
+        type: "string"
+        example: "john54321"
+        description: "the password of the account"
+    description: "The request to authenticate a user using native app"
+  AuthenticationTokenResponse:
+    allOf:
+    - $ref: "#/definitions/AuthenticationToken"
+    - $ref: "#/definitions/Authentication"
+    - $ref: "#/definitions/ApiResponse"
+  DotComAuthenticationResponse:
+    allOf:
+    - $ref: "#/definitions/Authentication"
+    - $ref: "#/definitions/DotComAccount"
+    - $ref: "#/definitions/ApiResponse"
+  TermsResponse:
+    allOf:
+    - $ref: "#/definitions/Terms"
+    - $ref: "#/definitions/ApiResponse"
+  ApiResponse:
+    type: "object"
+    required:
+    - "timestamp"
+    - "txnId"
+    discriminator: "txnId"
+    properties:
+      txnId:
+        type: "string"
+        description: "Transaction ID"
+      timestamp:
+        type: "string"
+        format: "date-time"
+        description: "Timestamp of response"
+      message:
+        type: "string"
+        description: "Human readable description of response"
+  AccessResponse:
+    allOf:
+    - $ref: "#/definitions/Access"
+    - $ref: "#/definitions/ApiResponse"
+  Access:
+    type: "object"
+    properties:
+      canAccessMobile:
+        type: "boolean"
+        description: "Indicates if the user has active mobile lines of business"
+      reason:
+        type: "string"
+        description: "Reason code by which the user has or not mobile access"
+        enum:
+        - "ALLOWED"
+        - "ROLE_UNAUTHORIZED"
+        - "NOT_CUSTOMER"
+        - "ERROR"
+  ProfileData:
+    type: "object"
+    properties:
+      accountNumber:
+        type: "string"
+        example: "1234567"
+        description: "account number of a user"
+      firstName:
+        type: "string"
+        example: "John"
+        description: "first name of a user"
+      lastName:
+        type: "string"
+        example: "Doe"
+        description: "last name of a user"
+      role:
+        type: "string"
+        example: "PRIMARY"
+        description: "identity role"
+        enum:
+        - "PRIMARY"
+        - "ADMIN"
+        - "CHILD"
+        - "BILLING"
+        - "UNKNOWN"
+      email:
+        type: "string"
+        example: "John.Doe@in-track.com"
+        description: "email address"
+      contactPhone:
+        type: "string"
+        example: "8675309"
+        description: "Preferred contact phone number"
+      termsConditionsTimestamp:
+        type: "string"
+        format: "date-time"
+        example: "2017-12-21T21:57:08.765Z"
+      termsAndConditionsAccepted:
+        type: "boolean"
+        description: "Indicates if the user has accepted the Terms and Conditions.\
+          \ Default is false"
+        default: false
+      entitlements:
+        type: "array"
+        description: "Entitlements for the user"
+        items:
+          $ref: "#/definitions/Entitlement"
+      accountStatus:
+        type: "string"
+        example: "ACTIVE"
+        description: "status of the use account"
+        enum:
+        - "ACTIVE"
+        - "SUSPENDED"
+        - "PROSPECT"
+        - "DEACTIVATED"
+  Entitlement:
+    type: "string"
+    description: "string describing a users permitted operation"
+    example: "\"VOICEMAIL\""
+    enum:
+    - "ADD_DELETE_USER"
+    - "ASSIGN_ROLES"
+    - "EDIT_USERNAMES"
+    - "EDIT_PASSWORDS"
+    - "EDIT_SECURITY_QUESTIONS"
+    - "EDIT_CONTACT_INFO"
+    - "PAY_BILL"
+    - "EDIT_GREETING"
+    - "ADD_LINE_OF_SERVICE"
+    - "DISCONNECT_LINE_OF_SERVICE"
+    - "DISCONNECT_MOBILE_ACCOUNT"
+    - "ACTIVATE_LINE"
+    - "MODIFY_AUTO_PAY_METHOD"
+    - "PURCHASE_DEVICE_ON_EIP"
+    - "MODIFY_ACCOUNT_PIN"
+    - "VIEW_TOTAL_BILL_AMOUNT"
+    - "VIEW_BILLIN_PAYMENT_HISTORY"
+    - "VIEW_RATE_PLAN"
+    - "VIEW_USAGE_DATA"
+    - "VIEW_WIFI_USAGE"
+    - "VIEW_LONG_DISTANCE_USAGE"
+    - "VIEW_ROAMING_USAGE"
+    - "USAGE_ALERTS"
+    - "CHANGE_RATE_PLANS"
+    - "ADD_REMOVE_BOLT_ONS"
+    - "CHANGE_MDN"
+    - "PURCHASE_ACCESSORIES"
+    - "FILE_INSURANCE_CLAIM"
+    - "ENABLE_DISABLE_LONG_DISTANCE"
+    - "ENABLE_DISABLE_ROAMING"
+    - "SUSPEND_LINE"
+    - "VOICEMAIL"
+  AuthenticationSessionResponse:
+    allOf:
+    - $ref: "#/definitions/AuthenticationSession"
+    - $ref: "#/definitions/Authentication"
+    - $ref: "#/definitions/ApiResponse"
+  AuthenticationToken:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+        description: "The encrypted id of the session created for the authenticated\
+          \ user. This token should be passed back using a cookie header naming the\
+          \ cookie mobile-session-encrypted"
+    description: "The object containing the authentication token"
+  AuthenticationSession:
+    type: "object"
+    properties:
+      sessionId:
+        type: "string"
+        description: "The unencrypted id of the session created for the authenticated\
+          \ user. This id will be encrypted on mobile-auth-orchestrator to be returned\
+          \ as mobile_encrypted_cookie"
+    description: "The object containing the authentication response along with session\
+      \ id which will be used to create mobile_encrypted_cookie on mobile-auth-orchestrator"
+  AuthenticationResponse:
+    allOf:
+    - $ref: "#/definitions/Authentication"
+    - $ref: "#/definitions/ApiResponse"
+  DotComAccount:
+    type: "object"
+    properties:
+      accountNumber:
+        type: "string"
+        example: "123456789101112"
+        description: "The user's Spectrum billing account number"
+      divisionId:
+        type: "string"
+        example: "BHNRES.003"
+        description: "The id of the division"
+      customerGuid:
+        type: "string"
+        example: "f1042b67-dcee-48fb-9a11-779448be6924"
+        description: "The Guid of the customer"
+      ucan:
+        type: "string"
+        example: "e1042b67-dcee-48fb-9a11-779448be6924"
+        description: "The UCAN"
+      role:
+        type: "string"
+        example: "PRIMARY"
+        description: "The user's role for their Spectrum account [PRIMARY, ADMIN,\
+          \ STANDARD]"
+    description: "Spectrum Account details used to initiate an Arterra customer"
+  Authentication:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+        example: "john.doe@in-track.com"
+        description: "username of the authenticated user"
+      status:
+        type: "string"
+        example: "UNIQUE_AUTH"
+        description: "Status of the authentication. Possible values are UNIQUE_AUTH (when user was authenticated successfully),\
+                  \ ALL_LOCKED (when the user account is in LOCKED state), IP_LOCKED (when client ip was locked due to security issues),\
+                  \ INVALID_CREDS (when user provided invalid credentials), BLACKLISTED_CREDS (when user credentials are blacklisted),\
+                  \ NO_MOBILE_SERVICE (when user was authenticated but does not have mobile services), MOBILE_UNAUTHORIZED (when user\
+                  \ was authenticated but does not have permissions to access mobile services and ERROR (when an unexpected error occured),\
+                  \ COMPLIANCE (when user authenticates but is not CPNI compliant)."
+        enum:
+        - "UNIQUE_AUTH"
+        - "ALL_LOCKED"
+        - "IP_LOCKED"
+        - "INVALID_CREDS"
+        - "BLACKLISTED_CREDS"
+        - "ERROR"
+        - "MOBILE_UNAUTHORIZED"
+        - "NO_MOBILE_SERVICE"
+        - "COMPLIANCE"
+      action:
+        type: "string"
+        example: "DISPLAY_RECOVERY_HINT"
+        description: "Action Hint to client, e.g. suggest user goes to recovery flow\
+          \ if AttemptNumber crosses threshold"
+        enum:
+        - "DISPLAY_RECOVERY_HINT"
+    description: "the object containing details of the authentication process"
+  Terms:
+    type: "object"
+    properties:
+      acceptedTimestamp:
+        type: "string"
+        format: "date-time"
+        example: "2018-01-05T21:45:09.132Z"
+        description: "The date and time the terms and conditions where accepted or\
+          \ declined, this will be null if the user has not accepted or declined the\
+          \ T&C."
+      version:
+        type: "string"
+        example: "V.01"
+        description: "The version number of the terms and conditions accepted"
+      accepted:
+        type: "boolean"
+        description: "Indicated if the user has accepted the Terms and Conditions,\
+          \ the initial value will be false."
+        default: false
+    description: "Terms and conditions status object"
+  TxnInfo:
+    type: "object"
+    discriminator: "txnId"
+    properties:
+      txnId:
+        type: "string"
+        description: "Transaction ID"
+      timestamp:
+        type: "string"
+        format: "date-time"
+  CpniValidationStatus:
+    type: "object"
+    required:
+    - "validStatus"
+    properties:
+      validStatus:
+        type: "boolean"
+        description: "Indicates if the CPNI status for a given MAC or serial number\
+          \ is valid"
+  VerificationStatusResponse:
+    allOf:
+    - $ref: "#/definitions/CpniValidationStatus"
+    - $ref: "#/definitions/TxnInfo"
+  LocationHeaderResponse:
+    type: "object"
+    properties:
+      location:
+        type: "string"
+        description: "The location response header"

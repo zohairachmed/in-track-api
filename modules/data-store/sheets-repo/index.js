@@ -2,6 +2,7 @@
 const MongoProvider = require('../mongo-utils');
 const mongoose = require('mongoose');
 const debug = require('debug')('AccountRepo');
+const _ = require('lodash');
 
 module.exports = function () {
     debug('AccountRepo - Initializing repository');
@@ -111,7 +112,22 @@ module.exports = function () {
     mongoose.model(sheetInfoModelName, SheetInfoSchema);
 
 
-    let getSheet= (sheetId) => {
+    let getAllSheets = () => {
+        let SheetInfoModel = mongoose.model(sheetInfoModelName);
+
+        const getAllQuery = SheetInfoModel.find({}).then((result) => {
+            debug(`Retrieved ${result.length} sheets`);
+            return result;
+        }).catch((error) => {
+            debug(`Error retrieving sheets. Error: ${JSON.stringify(error)}`);
+            return error;
+        });
+
+        return getAllQuery;
+    };
+
+
+    let getSheet = (sheetId) => {
         let SheetInfoModel = mongoose.model(sheetInfoModelName);
 
         debug(`Getting ${sheetId} from repository`);
@@ -129,6 +145,7 @@ module.exports = function () {
                 return queryResponse;
             });
     };
+
 
     let addSheet = (sheetId, data) => {
         let SheetInfoModel = mongoose.model(sheetInfoModelName);
@@ -153,9 +170,8 @@ module.exports = function () {
 
             // contacts
             newSheetInfo.data = [];            
-            if (data.data && data.data.length) {
-                for (let i = 0; i < data.data.length; i++) {                    
-                   
+            if (data.data && data.data.length) {                   
+                _.times(data.data.length, function (i) {
                     newSheetInfo.data.push({
                         rowId : data.data[i].rowId || i,
                         inventory: data.data[i].inventory || 0,
@@ -171,7 +187,7 @@ module.exports = function () {
                         listingUrl: data.data[i].listingUrl || '',
                         supplierUrl: data.data[i].supplierUrl || ''
                     });
-                }
+                });
             }
                
             debug(`Adding sheet: ${JSON.stringify(newSheetInfo)}`);
@@ -190,20 +206,6 @@ module.exports = function () {
             .then(getOrCreate);
     };
 
-    let getAllSheets = () => {
-        let SheetInfoModel = mongoose.model(sheetInfoModelName);
-
-        const getAllQuery = SheetInfoModel.find({}).then((result) => {
-            debug(`Retrieved ${result.length} sheets`);
-            return result;
-        }).catch((error) => {
-            debug(`Error retrieving sheets. Error: ${JSON.stringify(error)}`);
-            return error;
-        });
-
-        return getAllQuery;
-    };
-
     let updateSheet = (sheetId, data) => {
         const update = (sheetInfo) => {
             if (!sheetInfo) {
@@ -211,59 +213,73 @@ module.exports = function () {
             }
 
             debug(`UpdateAccount - Updating account ${sheetId} in repository`);
-            // if (data) {
-            //     debug(`UpdateSheet - Updating data for account ${accountGUID}`);
-            //     sheetInfo.name = data.name;
-            //     sheetInfo.description = data.description;
+            console.log(sheetInfo);
+            if (data) {
+                debug(`UpdateSheet - Updating data for account ${accountGUID}`);
+                // sheetInfo.name = data.name;
+                // sheetInfo.description = data.description;
 
-            //     repoAccount.streetAddress1 = data.streetAddress1 || "";
-            //     repoAccount.streetAddress2 = data.streetAddress2 || "";
-            //     repoAccount.city = data.city || "";
-            //     repoAccount.state = data.state || "";
-            //     repoAccount.zipCode = data.zipCode || "";
+                // sheetInfo.sheetId = data.sheetId;
+                sheetInfo.sheetName = data.sheetName;
+                sheetInfo.sheetDate = data.sheetDate;
+                sheetInfo.sheetNotes = data.sheetNotes;
+                sheetInfo.active = data.active;
+                sheetInfo.updated = data.updated;
+                sheetInfo.updatedBy = data.updatedBy;
+                sheetInfo.created = data.created;
+                sheetInfo.createdBy = data.createdBy;
 
-            //     // contacts
-            //     repoAccount.contacts = [];
-            //     if (data.contacts && data.contacts.length) {
-            //         for (let i = 0; i < data.contacts.length; i++) {
-            //             repoAccount.contacts.push({
-            //                 contactType: data.contacts[i].contactType,
-            //                 firstName: data.contacts[i].firstName,
-            //                 lastName: data.contacts[i].lastName,
-            //                 phoneNumber: data.contacts[i].phoneNumber,
-            //                 email: data.contacts[i].email,
-            //             });
-            //         }
-            //     }
+                //compare the data.Handsondata vs sheetInfo.data
 
-            //     // service accounts
-            //     repoAccount.serviceAccounts = [];
-            //     for (let i = 0; i < data.serviceAccounts.length; i++) {
-            //         let newServiceAccount = {
-            //             legacyCompany: data.serviceAccounts[i].legacyCompany,
-            //             serviceAccountId: data.serviceAccounts[i].serviceAccountId,
-            //             serviceType: data.serviceAccounts[i].serviceType
-            //         };
-            //         repoAccount.serviceAccounts.push(newServiceAccount);
-            //     }
+                // // contacts
+                // repoAccount.contacts = [];
+                // if (data.contacts && data.contacts.length) {
+                //     for (let i = 0; i < data.contacts.length; i++) {
+                //         repoAccount.contacts.push({
+                //             contactType: data.contacts[i].contactType,
+                //             firstName: data.contacts[i].firstName,
+                //             lastName: data.contacts[i].lastName,
+                //             phoneNumber: data.contacts[i].phoneNumber,
+                //             email: data.contacts[i].email,
+                //         });
+                //     }
+                // }
 
-            //     // users
-            //     if (data.users && data.users.length && data.users.length > 0) {
-            //         repoAccount.users = data.users;
-            //     }
+                // // hands on table data
+                // newSheetInfo.data = [];
+                // if (data.Handsondata && data.Handsondata.length) {
+                //     _.times(data.Handsondata.length, function (i) {
+                //         //for (let i = 0; i < data.Handsondata.length; i++) {
+                //         newSheetInfo.data.push({
+                //             rowId: data.Handsondata[i].rowId || i,
+                //             inventory: data.Handsondata[i].Inventory || 0,
+                //             title: data.Handsondata[i].Title || '',
+                //             listingPrice: data.Handsondata[i].AmazonListingPrice || 0,
+                //             supplierName: data.Handsondata[i].SupplierName || 0,
+                //             supplierPrice: data.Handsondata[i].SupplierPrice || 0,
+                //             listingFee: data.Handsondata[i].AmazonFee || 0,
+                //             tax: data.Handsondata[i].Taxes || 0,
+                //             shipping: data.Handsondata[i].ShippingFee || 0,
+                //             profit: data.Handsondata[i].Profit || 0,
+                //             profitMargin: data.Handsondata[i].ProfitMargin || 0,
+                //             listingUrl: data.Handsondata[i].AmazonUrl || '',
+                //             supplierUrl: data.Handsondata[i].SupplierUrl || ''
+                //         });
+                //     });
+                // }
 
-            //     //debug(`Incoming data: ${JSON.stringify(data)}; Updated Account: ${JSON.stringify(repoAccount)}`);
-            // }
+                //debug(`Incoming data: ${JSON.stringify(data)}; Updated Account: ${JSON.stringify(repoAccount)}`);
+            }
 
-            // let persistUpdate = repoAccount.save()
-            //     .then((result) => {
-            //         debug(`Account ${accountGUID} updated in repository`);
-            //         //return getAccount(result.portalAccountGUID);
-            //         return getAccount(accountGUID);
-            //     }).catch((error) => {
-            //         debug(`Error updating accont in repository! AccountGUID: ${accountGUID}; Error: ${JSON.stringify(error)}`);
-            //         throw error;
-            //     });
+            let persistUpdate = sheetInfo.save()
+                .then((result) => {
+                    debug(`Sheet ${sheetId} updated in repository`);
+                    //return getAccount(result.portalAccountGUID);
+                    return getSheet(sheetId);
+                }).catch((error) => {
+                    debug(`Error updating sheet in repository! SheetId: ${sheetId}; Error: ${JSON.stringify(error)}`);
+                    throw error;
+                });
 
             return data;
         };
