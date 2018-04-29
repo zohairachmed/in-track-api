@@ -190,5 +190,24 @@ module.exports = {
         //             reply('').code(500);
         //         }
         //     });
-    }
+    },
+    delete: function (req, reply, next) {
+        let sheetId = req.params.sheetId;
+        let body = req.payload;
+        
+        console.log(`Getting sheets for whatever user`);
+        SheetsRepo.delete(sheetId)
+            .then(sheetInfo => {
+                if (!sheetInfo) {
+                    reply().code(404);
+                } else {
+                    reply(sheetInfo).code(200);
+                }
+            })
+            .catch(error => {
+                console.log(`ERROR`);
+                console.log(error);
+                reply(error).code(500);
+            });
+        }
 };

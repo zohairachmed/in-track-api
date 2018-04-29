@@ -214,6 +214,7 @@ module.exports = function () {
 
             debug(`UpdateAccount - Updating account ${sheetId} in repository`);
             console.log(sheetInfo);
+           
             if (data) {
                 debug(`UpdateSheet - Updating data for account ${sheetId}`);
                 // sheetInfo.name = data.name;
@@ -226,9 +227,19 @@ module.exports = function () {
                 sheetInfo.active = data.active;
                 sheetInfo.updated = data.updated;
                 sheetInfo.updatedBy = data.updatedBy;
-                sheetInfo.created = data.created;
-                sheetInfo.createdBy = data.createdBy;
+               // sheetInfo.created = data.created;
+                //sheetInfo.createdBy = data.createdBy;
+                // var bulk = SheetInfoModel.collection.initializeOrderedBulkOp(); //ordered
+                // bulk.find({
+                //     'sheetId':data.sheetId
+                // }).exec().then(sheetData=>{
+                //     sheetData.data.find({
 
+                //     })
+                // })  
+                
+               
+               
                 
                 //compare the data.Handsondata vs sheetInfo.data
 

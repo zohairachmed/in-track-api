@@ -162,6 +162,46 @@ paths:
           description: "Used for a 500 HTTP response - Internal server error"
           schema:
             $ref: "#/definitions/Error"
+    delete:
+      tags:
+      - CRUD Operations
+      summary: "delete sheet"
+      description: "Allows you to delete a new sheet"
+      operationId: "deleteSheetInfo"
+      parameters:
+      - name: "token"
+        in: "header"
+        description: "The user's session identifier"
+        required: false
+        type: "string"
+        format: "string"
+      - name: "sheetId"
+        in: "path"
+        description: "The product id we need to check inventory for"
+        required: true
+        type: "string"      
+      responses:
+        200:
+          description: "A response describing status of the payment method update"
+          schema:
+            $ref: "#/definitions/TokenAcceptanceResponse"
+        401:
+          description: "Used for a 401 HTTP response - Client not authenticated"
+          schema:
+            $ref: "#/definitions/Error"
+        403:
+          description: "The logged-in user is not permitted to perform the current\
+            \ operation."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
 definitions:
   Error:  
     allOf:
