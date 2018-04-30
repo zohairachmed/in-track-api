@@ -214,20 +214,17 @@ module.exports = function () {
 
             debug(`UpdateAccount - Updating account ${sheetId} in repository`);
             console.log(sheetInfo);
-           
+
             if (data) {
                 debug(`UpdateSheet - Updating data for account ${sheetId}`);
-                // sheetInfo.name = data.name;
-                // sheetInfo.description = data.description;
 
-                // sheetInfo.sheetId = data.sheetId;
                 sheetInfo.sheetName = data.sheetName;
                 sheetInfo.sheetDate = data.sheetDate;
                 sheetInfo.sheetNotes = data.sheetNotes;
                 sheetInfo.active = data.active;
                 sheetInfo.updated = data.updated;
                 sheetInfo.updatedBy = data.updatedBy;
-               // sheetInfo.created = data.created;
+                // sheetInfo.created = data.created;
                 //sheetInfo.createdBy = data.createdBy;
                 // var bulk = SheetInfoModel.collection.initializeOrderedBulkOp(); //ordered
                 // bulk.find({
@@ -237,48 +234,60 @@ module.exports = function () {
 
                 //     })
                 // })  
-                
-               
-               
-                
+                // {
+                //     "sheetId": "b9c3f886-89b6-5ead-01b8-77df2d04f803",
+                //     "sheetName": "sadafafa3333444555",
+                //     "sheetDate": "2018-04-27T00:03:54.722Z",
+                //     "data": [
+                //       {
+                //         "value": "G",
+                //         "prop": "title",
+                //         "rowId": 0
+                //       },
+                //       {
+                //         "value": "HF",
+                //         "prop": "title",
+                //         "rowId": 1
+                //       },
+                //       {
+                //         "value": 1,
+                //         "prop": "inventory",
+                //         "rowId": 1
+                //       }
+                //     ],
+                //     "sheetNotes": "sfasdasdasdasda",
+                //     "active": true,
+                //     "updated": "2018-04-29T03:53:02.572Z",
+                //     "updatedBy": "zaid"
+                //   }
+
+
                 //compare the data.Handsondata vs sheetInfo.data
-
-                // // contacts
-                // repoAccount.contacts = [];
-                // if (data.contacts && data.contacts.length) {
-                //     for (let i = 0; i < data.contacts.length; i++) {
-                //         repoAccount.contacts.push({
-                //             contactType: data.contacts[i].contactType,
-                //             firstName: data.contacts[i].firstName,
-                //             lastName: data.contacts[i].lastName,
-                //             phoneNumber: data.contacts[i].phoneNumber,
-                //             email: data.contacts[i].email,
-                //         });
-                //     }
-                // }
-
-                // // hands on table data
-                // newSheetInfo.data = [];
-                // if (data.Handsondata && data.Handsondata.length) {
-                //     _.times(data.Handsondata.length, function (i) {
-                //         //for (let i = 0; i < data.Handsondata.length; i++) {
-                //         newSheetInfo.data.push({
-                //             rowId: data.Handsondata[i].rowId || i,
-                //             inventory: data.Handsondata[i].Inventory || 0,
-                //             title: data.Handsondata[i].Title || '',
-                //             listingPrice: data.Handsondata[i].AmazonListingPrice || 0,
-                //             supplierName: data.Handsondata[i].SupplierName || 0,
-                //             supplierPrice: data.Handsondata[i].SupplierPrice || 0,
-                //             listingFee: data.Handsondata[i].AmazonFee || 0,
-                //             tax: data.Handsondata[i].Taxes || 0,
-                //             shipping: data.Handsondata[i].ShippingFee || 0,
-                //             profit: data.Handsondata[i].Profit || 0,
-                //             profitMargin: data.Handsondata[i].ProfitMargin || 0,
-                //             listingUrl: data.Handsondata[i].AmazonUrl || '',
-                //             supplierUrl: data.Handsondata[i].SupplierUrl || ''
-                //         });
-                //     });
-                // }
+                _.forEach(data.data, function (element) {
+                    //find the data matching id first
+                    var itemToUpdate = sheetInfo.data.find(item => item.sheetId === element.sheetId);
+                    if (itemToUpdate) {
+                        itemToUpdate[element.prop] = element.value;
+                    }
+                    else {
+                        //item doesn't exist - add it
+                        // sheetInfo.data.push({
+                        //     rowId: element.rowId || i,
+                        //     inventory: data.Handsondata[i].Inventory || 0,
+                        //     title: data.Handsondata[i].Title || '',
+                        //     listingPrice: data.Handsondata[i].AmazonListingPrice || 0,
+                        //     supplierName: data.Handsondata[i].SupplierName || 0,
+                        //     supplierPrice: data.Handsondata[i].SupplierPrice || 0,
+                        //     listingFee: data.Handsondata[i].AmazonFee || 0,
+                        //     tax: data.Handsondata[i].Taxes || 0,
+                        //     shipping: data.Handsondata[i].ShippingFee || 0,
+                        //     profit: data.Handsondata[i].Profit || 0,
+                        //     profitMargin: data.Handsondata[i].ProfitMargin || 0,
+                        //     listingUrl: data.Handsondata[i].AmazonUrl || '',
+                        //     supplierUrl: data.Handsondata[i].SupplierUrl || ''
+                        // });
+                    }
+                });
 
                 //debug(`Incoming data: ${JSON.stringify(data)}; Updated Account: ${JSON.stringify(repoAccount)}`);
             }
