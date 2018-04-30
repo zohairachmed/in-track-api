@@ -206,14 +206,14 @@ module.exports = function () {
             .then(getOrCreate);
     };
 
-    let updateSheet = (sheetId, data) => {
+    let updateSheet = (sheetId, data) => {        
         const update = (sheetInfo) => {
             if (!sheetInfo) {
                 throw (`Unable to update sheet ${sheetId} as it does not exist in the repository`);
             }
 
             debug(`UpdateAccount - Updating account ${sheetId} in repository`);
-            console.log(sheetInfo);
+            
 
             if (data) {
                 debug(`UpdateSheet - Updating data for account ${sheetId}`);
@@ -265,13 +265,17 @@ module.exports = function () {
                 //compare the data.Handsondata vs sheetInfo.data
                 _.forEach(data.data, function (element) {
                     //find the data matching id first
-                    var itemToUpdate = sheetInfo.data.find(item => item.sheetId === element.sheetId);
+                    
+                    var itemToUpdate = sheetInfo.data.find(item => item.rowId === element.rowId);
                     if (itemToUpdate) {
-                        itemToUpdate[element.prop] = element.value;
+                        if(Object.keys(element) !== "rowId"){
+                            itemToUpdate[Object.keys(element)] = Object.values(element);
+                        }                        
                     }
                     else {
                         //item doesn't exist - add it
-                        // sheetInfo.data.push({
+                         //sheetInfo.data.push({
+                            //Object.keys(element)
                         //     rowId: element.rowId || i,
                         //     inventory: data.Handsondata[i].Inventory || 0,
                         //     title: data.Handsondata[i].Title || '',
