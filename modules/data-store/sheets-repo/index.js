@@ -96,7 +96,7 @@ module.exports = function () {
         },
         updatedBy: {
             type: String,
-            required: true
+            required: false
         },
         created: {
             type: Date,
@@ -104,7 +104,7 @@ module.exports = function () {
         },
         createdBy: {
             type: String,
-            required: true
+            required: false
         },
         data: [SheetDataSchema]
     });
@@ -265,13 +265,16 @@ module.exports = function () {
                 //compare the data.Handsondata vs sheetInfo.data
                 _.forEach(data.data, function (element) {
                     //find the data matching id first
-                    
-                    var itemToUpdate = sheetInfo.data.find(item => item.rowId === element.rowId);
-                    if (itemToUpdate) {
-                        if(Object.keys(element) !== "rowId"){
-                            itemToUpdate[Object.keys(element)] = Object.values(element);
-                        }                        
-                    }
+                   
+                    var itemToUpdate = sheetInfo.data.find(item => item.rowId === element.rowId);                 
+                    if (itemToUpdate) {                                           
+                       Object.keys(element).forEach(function(key){                           
+                            if(key !== 'rowId'){
+                                console.log(key)
+                                itemToUpdate[Object.keys(element)[0]] = Object.values(element)[0];                               
+                            }
+                       });
+                    }                    
                     else {
                         //item doesn't exist - add it
                          //sheetInfo.data.push({
