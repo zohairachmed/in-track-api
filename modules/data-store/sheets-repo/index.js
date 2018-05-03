@@ -206,6 +206,7 @@ module.exports = function () {
             .then(getOrCreate);
     };
 
+
     let updateSheet = (sheetId, data) => {        
         const update = (sheetInfo) => {
             if (!sheetInfo) {
@@ -316,6 +317,7 @@ module.exports = function () {
             .then(update);
     };
 
+
     let deleteSheet = (sheetId) => {
         let SheetInfoModel = mongoose.model(sheetInfoModelName);
 
@@ -333,6 +335,21 @@ module.exports = function () {
             });
 
         return remove;
+    };
+
+
+    let getAllRows = () => {
+        let SheetInfoModel = mongoose.model(sheetInfoModelName);
+
+        const getAllQuery = SheetInfoModel.find({}, 'data').then((result) => {
+            debug(`Retrieved ${result.length} rows`);
+            return result;
+        }).catch((error) => {
+            debug(`Error retrieving sheets. Error: ${JSON.stringify(error)}`);
+            return error;
+        });
+
+        return getAllQuery;
     };
 
 
@@ -682,11 +699,6 @@ module.exports = function () {
                 return getSheet(sheetId);
             });
         },
-        // getByName: (accountName) => {
-        //     return MongoProvider.connectionPromise.then(() => {
-        //         return getAccountByName(accountName);
-        //     });
-        // },
         update: (sheetId, data) => {
             debug('calling update mock account in repo');
 
@@ -704,6 +716,11 @@ module.exports = function () {
         getAll: () => {
             return MongoProvider.connectionPromise.then(() => {
                 return getAllSheets();
+            });
+        },
+        getAllRows: () => {
+            return MongoProvider.connectionPromise.then(() => {
+                return getAllRows();
             });
         },
         // getAccountsForUser: (username) => {
