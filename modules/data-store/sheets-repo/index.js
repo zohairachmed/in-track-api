@@ -207,14 +207,14 @@ module.exports = function () {
     };
 
 
-    let updateSheet = (sheetId, data) => {        
+    let updateSheet = (sheetId, data) => {
         const update = (sheetInfo) => {
             if (!sheetInfo) {
                 throw (`Unable to update sheet ${sheetId} as it does not exist in the repository`);
             }
 
             debug(`UpdateAccount - Updating account ${sheetId} in repository`);
-            
+
 
             if (data) {
                 debug(`UpdateSheet - Updating data for account ${sheetId}`);
@@ -266,20 +266,20 @@ module.exports = function () {
                 //compare the data.Handsondata vs sheetInfo.data
                 _.forEach(data.data, function (element) {
                     //find the data matching id first
-                   
-                    var itemToUpdate = sheetInfo.data.find(item => item.rowId === element.rowId);                 
-                    if (itemToUpdate) {                                           
-                       Object.keys(element).forEach(function(key){                           
-                            if(key !== 'rowId'){
+
+                    var itemToUpdate = sheetInfo.data.find(item => item.rowId === element.rowId);
+                    if (itemToUpdate) {
+                        Object.keys(element).forEach(function (key) {
+                            if (key !== 'rowId') {
                                 console.log(key)
-                                itemToUpdate[Object.keys(element)[0]] = Object.values(element)[0];                               
+                                itemToUpdate[Object.keys(element)[0]] = Object.values(element)[0];
                             }
-                       });
-                    }                    
+                        });
+                    }
                     else {
                         //item doesn't exist - add it
-                         //sheetInfo.data.push({
-                            //Object.keys(element)
+                        //sheetInfo.data.push({
+                        //Object.keys(element)
                         //     rowId: element.rowId || i,
                         //     inventory: data.Handsondata[i].Inventory || 0,
                         //     title: data.Handsondata[i].Title || '',
