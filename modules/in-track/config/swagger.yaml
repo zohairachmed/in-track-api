@@ -202,6 +202,41 @@ paths:
           description: "Used for a 500 HTTP response - Internal server error"
           schema:
             $ref: "#/definitions/Error"
+  /v1/sheets/processInventory:
+    get:
+      tags:
+        - Other Operations
+      summary: ''
+      description: ''
+      operationId: "getSheetData"
+      parameters:
+        - name: "sheetId"
+          in: "path"
+          description: "The product id we need to check inventory for"
+          required: false
+          type: "string"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/ProcessingStatus'
+        401:
+          description: "Used for a 401 HTTP response - Client not authenticated"
+          schema:
+            $ref: "#/definitions/Error"
+        403:
+          description: "The logged-in user is not permitted to perform the current\
+            \ operation."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: "Used for a 500 HTTP response - Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
 definitions:
   Error:  
     allOf:
@@ -369,4 +404,16 @@ definitions:
         type: "string"
         description: "The title"
     description: "A line level breakdown of sheet items"
+  ProcessingStatus:  
+    allOf:
+    - type: "object"
+      properties:
+        code:
+          type: "string"
+          description: "Error code, if applicable"
+        status:
+          type: "integer"
+          format: "int32"
+          description: "HTTP status code"
+    - $ref: "#/definitions/ApiResponse"
       
