@@ -36,6 +36,7 @@
     "path": "^0.12.7",
     "puppeteer": "^1.2.0",
     "swaggerize-hapi": "^2.0.1",
+    "util": "^0.10.3",
     "vision": "^4.1.1"
   }
 }

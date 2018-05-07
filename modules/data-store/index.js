@@ -1,5 +1,10 @@
+'use strict';
+const UserSessionManager = require('./user-session-manager');
 const config = require('../config');
 const jwt = require('jsonwebtoken');
+const debug = require('debug')('MockStore');
+const util = require('util');
+const _ = require('lodash');
 
 module.exports = function () {
     let authenticateUser = (request) => {
@@ -70,9 +75,53 @@ module.exports = function () {
         });
     };
 
+    let getUserByUsername = (username) => {
+        return UserSessionManager.getSession(username)
+            .then(existingSession => {
+
+                // // return the existing session if it was there
+                if (existingSession) {
+                    debug(`GetUser - Existing session was found for ${username}`);
+                    return existingSession;
+                }
+
+                // try and pull mock user from repository
+                debug(`GetUser - Existing session was NOT found for ${username}. Checking repository...`);
+                return MockRepository.get(username)
+                    .then(repoUserData => {
+                        if (repoUserData && repoUserData.data) {
+                            // if we received data from the repository, 
+                            debug(`GetUser - Found user ${username} in repository`);
+                            return UserSessionManager.addSession(username, repoUserData.data);
+                        } else {
+                            // if there was no data in repository, generate it 
+                            debug(`GetUser - Generating user ${username}`);
+                            return MockGenerator.generateMockUser(username)
+                                .then(mockUserData => {
+                                    // add the data to the repository as temporary and add create a new session
+                                    // todo: implement logic to add the temporary generated user to the repository
+                                    return UserSessionManager.addSession(username, mockUserData);
+                                });
+                        }
+                    });
+            });
+    };
+
+    let getUser = (request) => {
+        let username = '';
+        return getUsernameFromRequest(request)
+            .then(resolvedUsername => {
+                username = resolvedUsername;
+                debug(`GetUser - Getting user ${username}`);
+                return getUserByUsername(username);
+            });
+    };
+
     return {
         authenticateUser: authenticateUser,
         getUsername: getUsernameFromRequest,
+        getUserByUsername: getUserByUsername,
+        getUser: getUser,
         
         register: function (server, options, next) {
             // todo: any initialization operations
